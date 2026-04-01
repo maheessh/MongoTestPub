@@ -1,7 +1,7 @@
 const { MongoClient } = require("mongodb");
 
 // The uri string must be the connection string for the database (obtained on Atlas).
-const uri = "mongodb+srv://<user>:<password>@ckmdb.5oxvqja.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://maheshpandit_db_user:maheshp2@cluster0.ynhjemk.mongodb.net/Mahesh_Storage?appName=Cluster0";
 // Make sure the package.json contains:
 //   "dependencies": {
 //    "express": "^4.18.2",
@@ -46,21 +46,19 @@ app.get('/say/:name', function(req, res) {
 
 // Route to access database:
 // Example: URL/api/mongo/12345
-app.get('/api/mongo/:item', function(req, res) {
+app.get('/api/mongo/:key/:value', function(req, res) {
 const client = new MongoClient(uri);
-const searchKey = "{ partID: '" + req.params.item + "' }";
-console.log("Looking for: " + searchKey);
-
+const searchKey = "{ " + req.params.key + ": '" + req.params.value + "' }";console.log("Looking for: " + searchKey);
 async function run() {
   try {
-    const database = client.db('ckmdb');
-    const parts = database.collection('cmps415');
+    const database = client.db('Mahesh_Storage');
+    const parts = database.collection('Storage');
 
     // Hardwired Query for a part that has partID '12345'
     // const query = { partID: '12345' };
     // But we will use the parameter provided with the route: URL/api/mongo/12345
     
-    const query = { partID: req.params.item };
+    const query = { [req.params.key]: req.params.value };
 
     const part = await parts.findOne(query);
     console.log(part);
